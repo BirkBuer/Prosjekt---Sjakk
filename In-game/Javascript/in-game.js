@@ -379,6 +379,40 @@ function movingPiece(){
             return;
         };
     }
+    else if(pieceTarget.classList.contains("tower")){
+        if(position1.x == position2.x || position1.y == position2.y){
+            placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
+            placementMatrix[position1.x][position1.y] = 0;
+        }
+        else{
+            alert("Du kan ikke flytte denne brikken hit.");
+            return;
+        };
+    }
+    else if(pieceTarget.classList.contains("queen")){
+        if((position1.x == position2.x || position1.y == position2.y) || (Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y))){
+            placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
+            placementMatrix[position1.x][position1.y] = 0;
+        }
+        else{
+            alert("Du kan ikke flytte denne brikken hit");
+            return;
+        };
+    }
+    else if(pieceTarget.classList.contains("king")){
+        if(Math.abs(position1.x - position2.x) == 1 || Math.abs(position1.y - position2.y) == 1){
+            placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
+            placementMatrix[position1.x][position1.y] = 0;
+        }
+        else{
+            alert("Du kan ikke flytte denne brikken hit");
+            return;
+        };
+    }
+    else{
+        alert("Error 404: Piece target not found.");
+        return;
+    };
     let imgList = document.querySelectorAll("img");
     for(let d = 0; d < imgList.length; d++){
         imgList[d].remove();
