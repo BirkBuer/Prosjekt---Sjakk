@@ -1,9 +1,9 @@
-//Grid-system creation
+// Grid-system creation
 const containerEl = document.querySelector(".container");
 const gridEl = document.querySelector(".grid0");
 
 
-//Chess board creation
+// Chess board creation
 var switchRow = false;
 for(let x=1; x<=64; x++){
     const createGrid = document.createElement("div");
