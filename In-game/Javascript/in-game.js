@@ -2,6 +2,7 @@
 const containerEl = document.querySelector(".container");
 const gridEl = document.querySelector(".grid0");
 
+import { VectorFree } from './vector.js';
 
 // Chess board creation
 var switchRow = false;
@@ -370,7 +371,7 @@ function movingPiece(){
         };
     }
     else if(pieceTarget.classList.contains("bishop")){
-        if(Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y)) {
+        if((Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y)) && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)) {
             placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
             placementMatrix[position1.x][position1.y] = 0;
         }
@@ -380,7 +381,8 @@ function movingPiece(){
         };
     }
     else if(pieceTarget.classList.contains("tower")){
-        if(position1.x == position2.x || position1.y == position2.y){
+        console.log("checking tower movement")
+        if((position1.x == position2.x || position1.y == position2.y) && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)) {
             placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
             placementMatrix[position1.x][position1.y] = 0;
         }
