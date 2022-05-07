@@ -192,60 +192,57 @@ for (let x = 0; x < nodelist.length; x += 8){
 };
 let pieceChosen;
 let piecePos;
-let pieceIsChosen = false;
 let position1 = { x: null, y: null };
 let position2 = { x: null, y: null };
 let pieceTarget;
 console.log(nodeMatrix);
 function selectPiece(event){
-    if (!pieceIsChosen){
-        pieceIsChosen = true;
-        pieceTarget = event.target;
-        pieceChosen = pieceTarget.id;
-        piecePos = pieceTarget.closest("div");
-        if (pieceTarget.classList.contains("pawn")){
-            console.log("pawn selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else if (pieceTarget.classList.contains("knight")){
-            console.log("knight selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else if (pieceTarget.classList.contains("bishop")){
-            console.log("bishop selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else if (pieceTarget.classList.contains("tower")){
-            console.log("tower selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else if (pieceTarget.classList.contains("queen")){
-            console.log("queen selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else if (pieceTarget.classList.contains("king")){
-            console.log("king selected, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        }
-        else {
-            console.log("Piece target error, ID: " + pieceTarget.id);
-            console.log("parent element: " + piecePos.id);
-        };
-        for (let x=0; x<nodeMatrix.length; x++) { 
-            for (let y=0; y<nodeMatrix[x].length; y++) {
-                if (nodeMatrix[x][y] == piecePos){
-                    console.log("Coordinates of first position: " + x + ", " + y);
-                    position1.x = x;
-                    position1.y = y;
-                };
+    pieceTarget = event.target;
+    pieceChosen = pieceTarget.id;
+    piecePos = pieceTarget.closest("div");
+    if (pieceTarget.classList.contains("pawn")){
+        console.log("pawn selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else if (pieceTarget.classList.contains("knight")){
+        console.log("knight selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else if (pieceTarget.classList.contains("bishop")){
+        console.log("bishop selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else if (pieceTarget.classList.contains("tower")){
+        console.log("tower selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else if (pieceTarget.classList.contains("queen")){
+        console.log("queen selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else if (pieceTarget.classList.contains("king")){
+        console.log("king selected, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    }
+    else {
+        console.log("Piece target error, ID: " + pieceTarget.id);
+        console.log("parent element: " + piecePos.id);
+    };
+    for (let x=0; x<nodeMatrix.length; x++) { 
+        for (let y=0; y<nodeMatrix[x].length; y++) {
+            if (nodeMatrix[x][y] == piecePos){
+                console.log("Coordinates of first position: " + x + ", " + y);
+                position1.x = x;
+                position1.y = y;
+            };
+            if (nodeMatrix[x][y].querySelector("img") != null){
+                nodeMatrix[x][y].querySelector("img").removeEventListener("click", selectPiece, true);
             };
         };
-        for(let node of nodelist){
-            node.addEventListener("click", movePiece, true);
-        };
-    }
-    else{
-        return;
+    };
+    
+    for(let node of nodelist){
+        node.addEventListener("click", movePiece, true);
     };
 };
 let moveTarget;
@@ -266,24 +263,65 @@ function movePiece(event){
     for(let node of nodelist){
         node.removeEventListener("click", movePiece, true);
     };
-    pieceIsChosen = false;
+
     if((position1.x == position2.x) && (position1.y == position2.y)){
         alert("Du kan ikke flytte en brikke til der den allerede er");
+        for (let x=0; x<nodeMatrix.length; x++) { 
+            for (let y=0; y<nodeMatrix[x].length; y++) {
+                if (nodeMatrix[x][y].querySelector("img") != null){
+                    nodeMatrix[x][y].querySelector("img").addEventListener("click", selectPiece, true);
+                };
+            };
+        };
         return;
     }
     else if((moveTarget.classList.contains("white") && pieceTarget.classList.contains("white")) || (moveTarget.classList.contains("black") && pieceTarget.classList.contains("black"))){
         alert("Du kan ikke flytte en brikke oppå din egen brikke");
+        for (let x=0; x<nodeMatrix.length; x++) { 
+            for (let y=0; y<nodeMatrix[x].length; y++) {
+                if (nodeMatrix[x][y].querySelector("img") != null){
+                    nodeMatrix[x][y].querySelector("img").addEventListener("click", selectPiece, true);
+                };
+            };
+        };
         return;
     }
     else{
         if(moveTarget.querySelector("img") != null){
             if((moveTarget.querySelector("img").classList.contains("white") && pieceTarget.classList.contains("white")) || (moveTarget.querySelector("img").classList.contains("black") && pieceTarget.classList.contains("black"))){
                 alert("Du kan ikke flytte en brikke oppå din egen brikke");
+                for (let x=0; x<nodeMatrix.length; x++) { 
+                    for (let y=0; y<nodeMatrix[x].length; y++) {
+                        if (nodeMatrix[x][y].querySelector("img") != null){
+                            nodeMatrix[x][y].querySelector("img").addEventListener("click", selectPiece, true);
+                        };
+                    };
+                };
                 return;
             }
-            else{movingPiece();};
+            else
+                {movingPiece();
+                for (let x=0; x<nodeMatrix.length; x++) { 
+                    for (let y=0; y<nodeMatrix[x].length; y++) {
+                        if (nodeMatrix[x][y].querySelector("img") != null){
+                            nodeMatrix[x][y].querySelector("img").addEventListener("click", selectPiece, true);
+                        };
+                    };
+                };
+                return;
+            };
         }
-        else{movingPiece();};
+        else{
+            movingPiece();
+            for (let x=0; x<nodeMatrix.length; x++) { 
+                for (let y=0; y<nodeMatrix[x].length; y++) {
+                    if (nodeMatrix[x][y].querySelector("img") != null){
+                        nodeMatrix[x][y].querySelector("img").addEventListener("click", selectPiece, true);
+                    };
+                };
+            };
+            return;
+        };
     };
 };
 function movingPiece(){
