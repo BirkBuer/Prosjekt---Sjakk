@@ -35,7 +35,7 @@ for(let x=1; x<=64; x++){
 //Chess pieces placement/creation
 const blackT = document.createElement("img");
 let placementMatrix = [
-    [-6, -3, -4, -10, -9, -4, -3, -6],
+    [-6, -3, -4, -9, -10, -4, -3, -6],
     [-1, -1, -1, -1, -1, -1, -1, -1],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
