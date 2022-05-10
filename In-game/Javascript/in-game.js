@@ -189,28 +189,28 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
         console.log('direction is north');
         for (let i = y1 - 1; i > y2; i--) {
             if (placementMatrix[i][x1] != 0) {
-                console.log("VectorFree found an obstacle")
+                console.log("VectorFree found an obstacle");
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 < x2 && y1 == y2) { //  east
         console.log('direction is east');
         for (let i = x1 + 1; i < x2; i++) {
             if (placementMatrix[y1][i] != 0) {
-                console.log("VectorFree found an obstacle")
+                console.log("VectorFree found an obstacle");
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 == x2 && y1 < y2) { //  south
         console.log('direction is south');
         for (let i = y1 + 1; i < y2; i++) {
             if (placementMatrix[i][x1] != 0) {
-                console.log("VectorFree found an obstacle")
+                console.log("VectorFree found an obstacle");
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 > x2 && y1 == y2) { //  west
         console.log('direction is west');
@@ -218,34 +218,34 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             if (placementMatrix[y1][i] != 0) {
                 console.log("VectorFree found an obstacle")
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 < x2 && y1 > y2) { // northeast
         console.log(`direction is northeast. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`);
-        for (let i = Math.abs(x2 - x1); i > 0; i--) {
+        for (let i = x2 - x1 - 1; i > 0; i--) {
             console.log(`i= ${i}: (x,y) is (${x1 + i},${y1 - i}): ${placementMatrix[y1 - i][x1 + i]}`);
             if (placementMatrix[y1 - i][x1 + i] != 0) {
                 console.log("VectorFree found an obstacle");
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 < x2 && y1 < y2) { // southeast
         console.log(`direction is southeast. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`);
-        for (let i = Math.abs(x2 - x1); i > 0; i--) { 
+        for (let i = x2 - x1 - 1; i > 0; i--) { 
             console.log(`i= ${i}: (x,y) is (${x1 + i},${y1 + i}): ${placementMatrix[y1 + i][x1 + i]}`);
-            if (placementMatrix[y1 + i][x1 + i] != 0 ) {
+            if (placementMatrix[y1 + i][x1 + i] != 0) {
                 console.log("VectorFree found an obstacle")
                 return false;
-            }
-        }
+            };
+        };
     } 
     else if (x1 > x2 && y1 < y2) { // southwest
         console.log(`direction is southwest. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`);
-        for (let i = Math.abs(x2 - x1); i < 0; i++) { 
+        for (let i = x1 - x2 - 1; i > 0; i--) { 
             console.log(`i= ${i}: (x,y) is (${x1 + i},${y1 + i}): ${placementMatrix[y1 + i][x1 - i]}`);
-            if (placementMatrix[y1 + i][x1 - i] != 0 ) {
+            if (placementMatrix[y1 + i][x1 - i] != 0) {
                 console.log("VectorFree found an obstacle")
                 return false;
             };
@@ -253,16 +253,16 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
     }
     else if (x1 > x2 && y1 > y2) { //  northwest
         console.log(`direction is northwest. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`);
-        for (let i = Math.abs(x2 - x1); i < 0; i++) { 
+        for (let i = x1 - x2 - 1; i > 0; i--) { 
             console.log(`i= ${i}: (x,y) is (${x1 + i},${y1 + i}): ${placementMatrix[y1 - i][x1 - i]}`);
-            if (placementMatrix[y1 - i][x1 - i] != 0 ) {
+            if (placementMatrix[y1 - i][x1 - i] != 0) {
                 console.log("VectorFree found an obstacle");
                 return false;
             };
         };
     };
     return true;
-}
+};
 //Chess piece movement & selection
 let nodelist = Array.from(containerEl.querySelectorAll("div"));
 console.log(nodelist);
@@ -320,7 +320,6 @@ function selectPiece(event){
             };
         };
     };
-    
     for(let node of nodelist){
         node.addEventListener("click", movePiece, true);
     };
@@ -408,7 +407,7 @@ function movingPiece(){
     if(pieceTarget.classList.contains("pawn")){
         if(pieceTarget.classList.contains("white")){
             if(position1.x == 6){
-                if((position2.x == 5 || position2.x == 4) && position2.y == position1.y){
+                if((position2.x == 5 || position2.x == 4) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
@@ -424,7 +423,7 @@ function movingPiece(){
         }
         else if(pieceTarget.classList.contains("black")){
             if(position1.x == 1){
-                if((position2.x == 2 || position2.x == 3) && position2.y == position1.y){
+                if((position2.x == 2 || position2.x == 3) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
@@ -471,7 +470,7 @@ function movingPiece(){
         };
     }
     else if(pieceTarget.classList.contains("queen")){
-        if((position1.x == position2.x || position1.y == position2.y) || (Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y))){
+        if((position1.x == position2.x || position1.y == position2.y) || (Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y)) && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
             placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
             placementMatrix[position1.x][position1.y] = 0;
         }
