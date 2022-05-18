@@ -263,7 +263,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
     };
     return true;
 };
-//Chess piece movement & selection
+//Chess piece selection
 let nodelist = Array.from(containerEl.querySelectorAll("div"));
 console.log(nodelist);
 const nodeMatrix = [];
@@ -324,6 +324,7 @@ function selectPiece(event){
         node.addEventListener("click", movePiece, true);
     };
 };
+//Movement
 let moveTarget;
 function movePiece(event){
     moveTarget = event.target;
@@ -378,8 +379,8 @@ function movePiece(event){
                 };
                 return;
             }
-            else
-                {movingPiece();
+            else{
+                movingPiece();
                 for (let x=0; x<nodeMatrix.length; x++) { 
                     for (let y=0; y<nodeMatrix[x].length; y++) {
                         if (nodeMatrix[x][y].querySelector("img") != null){
@@ -403,6 +404,13 @@ function movePiece(event){
         };
     };
 };
+
+function movePossible(piece){
+    if(piece.localName = "img" || piece.querySelector("img") != null){
+
+    }
+}
+
 function movingPiece(){
     if(pieceTarget.classList.contains("pawn")){
         if(pieceTarget.classList.contains("white")){
@@ -411,6 +419,10 @@ function movingPiece(){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
+                else{
+                    alert("Du kan ikke flytte denne brikken hit.");
+                    return;
+                };
             }
             else if(position1.x - 1 == position2.x && position1.y == position2.y){
                 placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
@@ -427,6 +439,10 @@ function movingPiece(){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
+                else{
+                    alert("Du kan ikke flytte denne brikken hit.");
+                    return;
+                };
             }
             else if(position1.x + 1 == position2.x && position1.y == position2.y){
                 placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
@@ -470,7 +486,7 @@ function movingPiece(){
         };
     }
     else if(pieceTarget.classList.contains("queen")){
-        if((position1.x == position2.x || position1.y == position2.y) || (Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y)) && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
+        if(((position1.x == position2.x || position1.y == position2.y) || (Math.abs(position1.x-position2.x) == Math.abs(position1.y - position2.y))) && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
             placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
             placementMatrix[position1.x][position1.y] = 0;
         }
