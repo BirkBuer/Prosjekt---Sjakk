@@ -405,6 +405,7 @@ function movePiece(event){
     };
 };
 
+//function containing/saving all possible moves, WIP (may not be completed, as it may not be necessary)
 function movePossible(piece){
     if(piece.localName = "img" || piece.querySelector("img") != null){
 
@@ -415,7 +416,7 @@ function movingPiece(){
     if(pieceTarget.classList.contains("pawn")){
         if(pieceTarget.classList.contains("white")){
             if(position1.x == 6){
-                if((position2.x == 5 || position2.x == 4) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
+                if((position2.x == 5 || position2.x == 4) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x - 1, position2.y)){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
@@ -424,7 +425,11 @@ function movingPiece(){
                     return;
                 };
             }
-            else if(position1.x - 1 == position2.x && position1.y == position2.y){
+            else if(position1.x - 1 == position2.x && position1.y == position2.y && (moveTarget.localName != "img" || (moveTarget.localName == "div" && moveTarget.querySelector("img") == null))){
+                placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
+                placementMatrix[position1.x][position1.y] = 0;
+            }
+            else if((moveTarget.querySelector("img") != null || moveTarget.localName == "img") && position1.x == position2.x - 1 && position2.y == position1.y + Math.abs(position1.y - position2.y)){
                 placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                 placementMatrix[position1.x][position1.y] = 0;
             }
@@ -435,7 +440,7 @@ function movingPiece(){
         }
         else if(pieceTarget.classList.contains("black")){
             if(position1.x == 1){
-                if((position2.x == 2 || position2.x == 3) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x, position2.y)){
+                if((position2.x == 2 || position2.x == 3) && position2.y == position1.y && VectorFree(placementMatrix, position1.x, position1.y, position2.x + 1, position2.y)){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
