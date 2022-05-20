@@ -405,13 +405,6 @@ function movePiece(event){
     };
 };
 
-//function containing/saving all possible moves, WIP (may not be completed, as it may not be necessary)
-function movePossible(piece){
-    if(piece.localName = "img" || piece.querySelector("img") != null){
-
-    }
-}
-
 function movingPiece(){
     if(pieceTarget.classList.contains("pawn")){
         if(pieceTarget.classList.contains("white")){
@@ -420,16 +413,20 @@ function movingPiece(){
                     placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 }
+                else if((moveTarget.classList.contains("black") || (moveTarget.localName == "div" && moveTarget.querySelector("img") != null)) && position2.x == position1.x - 1 && (position2.y == position1.y - 1 || position2.y == position1.y + 1)){
+                    placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
+                    placementMatrix[position1.x][position1.y] = 0;
+                }
                 else{
                     alert("Du kan ikke flytte denne brikken hit.");
                     return;
                 };
             }
-            else if(position1.x - 1 == position2.x && position1.y == position2.y && (moveTarget.localName != "img" || (moveTarget.localName == "div" && moveTarget.querySelector("img") == null))){
+            else if(position1.x - 1 == position2.x && position1.y == position2.y && (moveTarget.localName == "div" && moveTarget.querySelector("img") == null)){
                 placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                 placementMatrix[position1.x][position1.y] = 0;
             }
-            else if((moveTarget.querySelector("img") != null || moveTarget.localName == "img") && position1.x == position2.x - 1 && position2.y == position1.y + Math.abs(position1.y - position2.y)){
+            else if((moveTarget.classList.contains("black") || (moveTarget.localName == "div" && moveTarget.querySelector("img") != null)) && position2.x == position1.x - 1 && (position2.y == position1.y - 1 || position2.y == position1.y + 1)){
                 placementMatrix[position2.x][position2.y] = placementMatrix[position1.x][position1.y];
                 placementMatrix[position1.x][position1.y] = 0;
             }
