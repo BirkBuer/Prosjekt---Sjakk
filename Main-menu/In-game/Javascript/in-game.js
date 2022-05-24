@@ -1,12 +1,14 @@
-// Grid-system creation
+// Grid-system start.
 const containerEl = document.querySelector(".container");
 const gridEl = document.querySelector(".grid0");
 
-// Chess board creation
+// Generering av sjakkbrett.
 var switchRow = false;
 for (let x = 1; x <= 64; x++) {
     const createGrid = document.createElement("div");
     createGrid.id = "cell_" + x;
+
+    // Dette er det som skaper mønsteret til sjakkbrettet.
     if (switchRow == true) {
         if (x % 2 == 0) {
             createGrid.style.backgroundColor = "white";
@@ -20,16 +22,23 @@ for (let x = 1; x <= 64; x++) {
             createGrid.style.backgroundColor = "white";
         }
     }
+
+    // Skaping av sjakkbrettet.
     createGrid.style.display = "flex";
     createGrid.style.justifyContent = "center";
     createGrid.style.alignItems = "center";
     containerEl.appendChild(createGrid);
+
+    // Her byttes variabelens boolean-verdi, som gjør at mønsteret bytter seg hver 8. rute, hvis ikke hadde sjakkbrettet bare vært linjer, og ikke rutete.
     if (x % 8 == 0) {
         switchRow = !switchRow;
     }
 }
 
-//Chess pieces placement/creation
+// Her starter programmeringen som skaper og plasserer sjakk-bitene.
+
+// Plasseringen er ikke en fast plassering, det er basert på matrixen "placementMatrix".
+// placementMatrix blir forandret i bevegelsesfunksjonene, og derfor blir sjakkbrettet endret hver gang man bruker loadPieces() funksjonen.
 const blackT = document.createElement("img");
 let placementMatrix = [
     [-6, -3, -4, -9, -10, -4, -3, -6],
@@ -41,6 +50,7 @@ let placementMatrix = [
     [1, 1, 1, 1, 1, 1, 1, 1],
     [6, 3, 4, 9, 10, 4, 3, 6],
 ];
+//Her telles antall brikker det er av hver type/farge, antallet forandrer seg selvfølgelig senere.
 var pieceNum = {
     pawn: {
         white: 1,
@@ -59,13 +69,15 @@ var pieceNum = {
         black: 1,
     },
 };
-//Denne funksjonen er laster inn
+// Dette er funksjonen som laster inn alle sjakk-brikkene.
 loadPieces();
 function loadPieces() {
+    // for-løkker som utfører lastingen av sjakk-brikkene, en etter en.
     for (let x = 0; x < placementMatrix.length; x++) {
         for (let y = 0; y < placementMatrix[x].length; y++) {
             if (placementMatrix[x][y] == 0) {
             } else {
+                // Variabel-suppe som endrer verdier lenger ned i funksjonen.
                 let createImage = document.createElement("img");
                 var fileName = "";
                 var pieceID = "";
@@ -77,6 +89,11 @@ function loadPieces() {
                     fileName += "white";
                 }
                 fileName += "_";
+                // Her lærte jeg å bruke "switch" av Igor.
+                // Jeg brukte det ikke noe mer senere i dokumentet, men jeg syntest likevel det var kult å lære.
+                // Det gjør nesten det samme som et if-statement, men litt anerledes.
+
+                // Her blir identiteten, filnavnet, og nummeret til brikken dannet.
                 switch (Math.abs(placementMatrix[x][y])) {
                     case 1:
                         fileName += "pawn.png";
@@ -159,7 +176,9 @@ function loadPieces() {
                         }
                         break;
                 }
-                createImage.src = "../../Assets/" + fileName;
+
+                // Her blir bildene til brikkene dannet, og de får sine klasser, identiteter, og alt annet som tilhører dem.
+                createImage.src = "../../../Assets/" + fileName;
                 createImage.id = pieceID;
                 createImage.classList.add(pieceClass);
                 createImage.classList.add(pieceType);
@@ -175,11 +194,20 @@ function loadPieces() {
     }
 }
 
-//Vector/collision checking
+// Denne funksjonen er en veldig viktig funksjon som sjekker om det er noe i den retningen den beveger seg i som blokkerer veien.
+// Den sjekker først hvilken retning du drar i ved å sjekke hvilke X-og-Y-verdier som er større og hvilke som er mindre.
+// Det er litt vanskelig å forklare hvordan de diagonale linjene blir sjekket, men det er litt samme konsept som de vertikale/horisontale.
+
+// OBS: X-og-Y-koordinatsystemet er baklengs, noe som måtte bli justert etter i denne funksjoner og de andre som bruker det.
+// Altså er X-koordinaten vertikal, og Y er horisontal.
+
+// Og forresten er alt som logges i konsollet på Engelsk, jeg gjorde dette fordi jeg bare syntest det var litt lettere.
 function VectorFree(placementMatrix, y1, x1, y2, x2) {
     console.log("VectorFree ", x1, y1, x2, y2);
+
+    // -- Vertikale/horisontale linjer --
     if (x1 === x2 && y1 > y2) {
-        //  north
+        // Nord
         console.log("direction is north");
         for (let i = y1 - 1; i > y2; i--) {
             if (placementMatrix[i][x1] != 0) {
@@ -188,7 +216,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 < x2 && y1 == y2) {
-        //  east
+        // Øst
         console.log("direction is east");
         for (let i = x1 + 1; i < x2; i++) {
             if (placementMatrix[y1][i] != 0) {
@@ -197,7 +225,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 == x2 && y1 < y2) {
-        //  south
+        // Sør
         console.log("direction is south");
         for (let i = y1 + 1; i < y2; i++) {
             if (placementMatrix[i][x1] != 0) {
@@ -206,7 +234,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 > x2 && y1 == y2) {
-        //  west
+        // Vest
         console.log("direction is west");
         for (let i = x1 - 1; i > x2; i--) {
             if (placementMatrix[y1][i] != 0) {
@@ -214,8 +242,11 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
                 return false;
             }
         }
-    } else if (x1 < x2 && y1 > y2) {
-        // northeast
+    }
+
+    // -- Diagonale linjer --
+    else if (x1 < x2 && y1 > y2) {
+        // Nordøst
         console.log(
             `direction is northeast. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`
         );
@@ -231,7 +262,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 < x2 && y1 < y2) {
-        // southeast
+        // Sørøst
         console.log(
             `direction is southeast. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`
         );
@@ -247,7 +278,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 > x2 && y1 < y2) {
-        // southwest
+        // Sørvest
         console.log(
             `direction is southwest. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`
         );
@@ -263,7 +294,7 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
             }
         }
     } else if (x1 > x2 && y1 > y2) {
-        //  northwest
+        // Nordvest
         console.log(
             `direction is northwest. start position (x,y) is (${x1},${y1})-->(${x2},${y2})`
         );
@@ -281,9 +312,14 @@ function VectorFree(placementMatrix, y1, x1, y2, x2) {
     }
     return true;
 }
-//Chess piece selection
+
+// Funksjonen som kjøres når man velger brikken man skal flytte og tilhørende variabler.
+// Denne funskjonen er ikke så avansert, den fyller egentlig bare et par globale variabler som brukes i senere funksjoner.
+// Den er fortsatt veldig viktig, da.
+
+// Variabel-suppe.
 let nodelist = Array.from(containerEl.querySelectorAll("div"));
-console.log(nodelist);
+console.log("Nodelist: " + nodelist);
 const nodeMatrix = [];
 for (let x = 0; x < nodelist.length; x += 8) {
     nodeMatrix.push(nodelist.slice(x, x + 8));
@@ -294,10 +330,14 @@ let position1 = { x: null, y: null };
 let position2 = { x: null, y: null };
 let pieceTarget;
 console.log(nodeMatrix);
+
+// Funksjonen som velger brikken du skal deretter flytte.
 function selectPiece(event) {
+    // Setter noen variabler
     pieceTarget = event.target;
     pieceChosen = pieceTarget.id;
     piecePos = pieceTarget.closest("div");
+    // If-statements som sjekker hva det er du trykker på.
     if (pieceTarget.classList.contains("pawn")) {
         console.log("pawn selected, ID: " + pieceTarget.id);
         console.log("parent element: " + piecePos.id);
@@ -320,6 +360,7 @@ function selectPiece(event) {
         console.log("Piece target error, ID: " + pieceTarget.id);
         console.log("parent element: " + piecePos.id);
     }
+    // For-løkke som fjerner noen eventlisteners og setter koordinater.
     for (let x = 0; x < nodeMatrix.length; x++) {
         for (let y = 0; y < nodeMatrix[x].length; y++) {
             if (nodeMatrix[x][y] == piecePos) {
@@ -338,11 +379,12 @@ function selectPiece(event) {
         node.addEventListener("click", movePiece, true);
     }
 }
-//Movement
+// Her begynner funksjonene som igangsetter bevegelsen av brikkene.
 let moveTarget;
 function movePiece(event) {
     moveTarget = event.target;
     console.log("moveTarget: " + moveTarget);
+    // For-løkke som setter koordinater.
     for (let x = 0; x < nodeMatrix.length; x++) {
         for (let y = 0; y < nodeMatrix[x].length; y++) {
             if (nodeMatrix[x][y] == moveTarget.closest("div")) {
@@ -354,10 +396,13 @@ function movePiece(event) {
     }
     console.log("Board position ID: " + moveTarget.closest("div").id);
     console.log("Piece chosen: " + pieceChosen);
+    // For-løkke som fjerner eventlistener til denne funksjonen.
     for (let node of nodelist) {
         node.removeEventListener("click", movePiece, true);
     }
+    // Her sjekker jeg for alle reglene, jeg skal kort forklare de jeg mener ikke er åpenbare og slikt.
 
+    // Sjekker om du prøver å flytte brikken oppå seg selv.
     if (position1.x == position2.x && position1.y == position2.y) {
         alert("Du kan ikke flytte en brikke til der den allerede er");
         for (let x = 0; x < nodeMatrix.length; x++) {
@@ -371,6 +416,7 @@ function movePiece(event) {
         }
         return;
     } else if (
+        // Sjekker om du prøver å flytte brikken din oppå en med samme farge.
         (moveTarget.classList.contains("white") &&
             pieceTarget.classList.contains("white")) ||
         (moveTarget.classList.contains("black") &&
@@ -388,6 +434,7 @@ function movePiece(event) {
         }
         return;
     } else {
+        // Sjekker samme ting igjen, men hvis du trykker på en celle med en brikke på, og ikke brikken i seg selv.
         if (moveTarget.querySelector("img") != null) {
             if (
                 (moveTarget.querySelector("img").classList.contains("white") &&
@@ -407,6 +454,8 @@ function movePiece(event) {
                 }
                 return;
             } else {
+                // Hvis funksjonen når fram hit, har ikke bevegelsen brutt de enkleste reglene.
+                // Da blir movingPiece() kjørt, der den går igjennom noen mer spesifikke tester.
                 movingPiece();
                 for (let x = 0; x < nodeMatrix.length; x++) {
                     for (let y = 0; y < nodeMatrix[x].length; y++) {
@@ -420,6 +469,7 @@ function movePiece(event) {
                 return;
             }
         } else {
+            // Samme her som ovenfor.
             movingPiece();
             for (let x = 0; x < nodeMatrix.length; x++) {
                 for (let y = 0; y < nodeMatrix[x].length; y++) {
@@ -435,13 +485,22 @@ function movePiece(event) {
     }
 }
 
+// movingPiece()-funksjonen er siste funksjonen som kjører når du flytter en brikke.
+// Den sjekker om brikken du flytter passer med reglene til den spesifikke brikken, og så flytter den hvis den ikke bryter reglene.
+// Hvis brikken passerer testen, flyttes den verdien som var i posisjon 1 til posisjon 2, og skaper en 0 der den før var.
+// Altså, alt dette i matrixen som ligger lengre opp.
 function movingPiece() {
+    // Her begynner den å sjekke hvilken type brikke du flytter.
+    // Bare i tilfelle; pawn er bonde, knight er hest, bishop er løper, tower er tårn, king & queen vet du hva er.
     if (pieceTarget.classList.contains("pawn")) {
+        // Bonden er den eneste som har forskjellig oppførsel basert på farge.
         if (pieceTarget.classList.contains("white")) {
+            // Her sjekker jeg for om bonden fortsatt er på første rad, da kan den flytte seg to fram.
             if (position1.x == 6) {
                 if (
                     (position2.x == 5 || position2.x == 4) &&
                     position2.y == position1.y &&
+                    // VectorFree-funksjonen har jeg tidligere forklart hva gjør. Den sjekker om noe er i veien, og returnerer true hvis veien ikke er blokkert.
                     VectorFree(
                         placementMatrix,
                         position1.x,
@@ -450,10 +509,13 @@ function movingPiece() {
                         position2.y
                     )
                 ) {
+                    // Alt dette gjør er å flytte brikken fra posisjon 1 til posisjon 2, og plassere et tomrom der den før var.
+                    // Du kommer til å se dette mange ganger.
                     placementMatrix[position2.x][position2.y] =
                         placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 } else if (
+                    // Her sjekker jeg om det er en brikke av omvendt farge diagonalt foran bonden, og lar den flytte seg dit hvis det er det.
                     (moveTarget.classList.contains("black") ||
                         (moveTarget.localName == "div" &&
                             moveTarget.querySelector("img") != null)) &&
@@ -465,10 +527,14 @@ function movingPiece() {
                         placementMatrix[position1.x][position1.y];
                     placementMatrix[position1.x][position1.y] = 0;
                 } else {
+                    // Hvis den ikke flytter seg, så kjører dette.
+                    // Relativt åpenbart.
                     alert("Du kan ikke flytte denne brikken hit.");
                     return;
                 }
             } else if (
+                // Her er standard "1 fram" flyttingen. Funker likt som de ovenfor.
+                // De if-statementene under dette igjen har allerede bitt brukt ovenfor, forklarer dem ikke igjen.
                 position1.x - 1 == position2.x &&
                 position1.y == position2.y &&
                 moveTarget.localName == "div" &&
@@ -493,6 +559,7 @@ function movingPiece() {
                 return;
             }
         } else if (pieceTarget.classList.contains("black")) {
+            // Her gjør den nøyaktig det samme som ovenfor, men med forskjellige verdier grunnet retningen den flytter seg.
             if (position1.x == 1) {
                 if (
                     (position2.x == 2 || position2.x == 3) &&
@@ -512,7 +579,7 @@ function movingPiece() {
                     (moveTarget.classList.contains("white") ||
                         (moveTarget.localName == "div" &&
                             moveTarget.querySelector("img") != null)) &&
-                    position2.x == position1.x - 1 &&
+                    position2.x == position1.x + 1 &&
                     (position2.y == position1.y - 1 ||
                         position2.y == position1.y + 1)
                 ) {
@@ -535,6 +602,12 @@ function movingPiece() {
                 return;
             }
         }
+        // Her slutter sjekkingen for bonden.
+        // Ikke frykt, de andre er ikke i nærheten av like avanserte/lange som bonden.
+
+        // Sjekking av flytting for hest.
+        // Dette er nok den største mengden tekst jeg har hatt inni parantesene i et if-statement.
+        // Hvis du lurer på hvordan filen er organisert så bra som den er, så er det fordi jeg har en "extension" i programmet VSCode som fikser det automatisk for meg.
     } else if (pieceTarget.classList.contains("knight")) {
         if (
             (position1.x == position2.x - 2 &&
@@ -557,6 +630,9 @@ function movingPiece() {
             alert("Du kan ikke flytte denne brikken hit.");
             return;
         }
+
+        // Sjekking for løper.
+        // Det var ikke så lett å komme på hvordan man sjekket om bevegelsen var diagonal, men med litt hjelp fra Igor gikk det etterhvert.
     } else if (pieceTarget.classList.contains("bishop")) {
         if (
             Math.abs(position1.x - position2.x) ==
@@ -576,6 +652,10 @@ function movingPiece() {
             alert("Du kan ikke flytte denne brikken hit.");
             return;
         }
+
+        // Sjekking for tårn.
+        // Dette var kanskje den letteste.
+        // Alt jeg trengte å gjøre var å sjekke om noen av aksene ikke endret seg.
     } else if (pieceTarget.classList.contains("tower")) {
         console.log("checking tower movement");
         if (
@@ -595,6 +675,10 @@ function movingPiece() {
             alert("Du kan ikke flytte denne brikken hit.");
             return;
         }
+
+        // Sjekking for dronning.
+        // Denne var også relativt lett, fordi jeg allerede hadde skrevet programmeringen for tårn og løper,
+        // så jeg trengte bare å kombinere de to.
     } else if (pieceTarget.classList.contains("queen")) {
         if (
             (position1.x == position2.x ||
@@ -616,6 +700,9 @@ function movingPiece() {
             alert("Du kan ikke flytte denne brikken hit");
             return;
         }
+
+        // Sjekking for konge.
+        // Denne var heller ikke vanskelig, fordi jeg trengte bare sjekke om noen av verdiene hadde forandret seg med en verdi av 1.
     } else if (pieceTarget.classList.contains("king")) {
         if (
             Math.abs(position1.x - position2.x) == 1 ||
@@ -629,9 +716,13 @@ function movingPiece() {
             return;
         }
     } else {
+        // Dette kjører bare hvis du på en eller annen måte klarte å kjøre funksjonen uten at den første valgte brikken har noen av de klassene nevnt ovenfor.
+        // Det bør ikke være mulig at dette skjer, men hvorfor ikke bare ha det med?
         alert("Error 404: Piece target not found.");
         return;
     }
+    // Og her er siste delen av den siste delen.
+    // Her slettes alle de eksisterende bildene (altså bare brikkene) og loadPieces() kjøres, som laster inn brikkene på nytt med de nye posisjonene.
     let imgList = document.querySelectorAll("img");
     for (let d = 0; d < imgList.length; d++) {
         imgList[d].remove();
